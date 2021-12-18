@@ -7,12 +7,37 @@ const bodyParser = require('body-parser')
 
 // Database
 const mysql = require('mysql')
+
+// Database credentials
+const DB_HOST = process.env.DB_HOST
+const DB_USER = process.env.DB_USER
+const DB_PASSWORD = process.env.DB_PASSWORD
+const DB_NAME = process.env.DB_NAME
+
+// Creating connection to database
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  // password: '',
-  // database: ''
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_NAME
 })
+
+// Generic function for database query
+function dbQuery (query) {
+  connection.query(query, (err, rows, fields) => {
+    try {
+      console.log(rows)
+    } catch (err) {
+      console.error(err)
+    }
+  })
+}
+
+// Connection to database
+connection.connect()
+
+// Disconnection from database
+connection.end()
 
 app.use(cors())
 app.use(bodyParser.json())
