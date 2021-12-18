@@ -1,12 +1,21 @@
 require('dotenv').config()
-const port = process.env.SERVER_PORT || 4000;
-const express = require('express');
-const app = express();
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const port = process.env.SERVER_PORT || 4000
+const express = require('express')
+const app = express()
+const cors = require('cors')
+const bodyParser = require('body-parser')
 
-app.use(cors());
-app.use(bodyParser.json());
+// Database
+const mysql = require('mysql')
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  // password: '',
+  // database: ''
+})
+
+app.use(cors())
+app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
   try {
@@ -24,4 +33,4 @@ app.post('/', (req, res) => {
   }
 })
 
-app.listen(port, () => console.log(`Server is listening at ${port} @ ${new Date(Date.now())}`));
+app.listen(port, () => console.log(`Server is listening at ${port} @ ${new Date(Date.now())}`))
