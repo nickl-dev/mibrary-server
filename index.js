@@ -5,6 +5,11 @@ const app = express()
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
+app.use(cors())
+app.use(bodyParser.json())
+
+app.listen(port, () => console.log(`Server is listening at ${port} @ ${new Date(Date.now())}`))
+
 // Database
 const mysql = require('mysql')
 
@@ -24,27 +29,19 @@ const connection = mysql.createConnection({
 
 // Generic function for database query
 function dbQuery (query) {
-  connection.query(query, (err, rows, fields) => {
-    try {
-      console.log(rows)
-    } catch (err) {
-      console.error(err)
-    }
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.error(err)
+    console.log(rows)
   })
 }
 
 // Connection to database
 connection.connect()
 
-// Disconnection from database
-connection.end()
-
-app.use(cors())
-app.use(bodyParser.json())
-
 app.get('/', (req, res) => {
   try {
-    res.send('Hello world')
+    const users = dbQuery('SELECT * FROM users')
+    res.send(users)
   } catch (err) {
     console.error(err)
   }
@@ -57,5 +54,3 @@ app.post('/', (req, res) => {
     console.errer(err)
   }
 })
-
-app.listen(port, () => console.log(`Server is listening at ${port} @ ${new Date(Date.now())}`))
