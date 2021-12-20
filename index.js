@@ -27,30 +27,23 @@ const connection = mysql.createConnection({
   database: DB_NAME
 })
 
-// Generic function for database query
-function dbQuery (query) {
-  connection.query(query, function (err, rows, fields) {
-    if (err) console.error(err)
-    console.log(rows)
-  })
-}
-
 // Connection to database
 connection.connect()
 
-app.get('/', (req, res) => {
-  try {
-    const users = dbQuery('SELECT * FROM users')
-    res.send(users)
-  } catch (err) {
-    console.error(err)
-  }
-})
+let users = []
 
-app.post('/', (req, res) => {
-  try {
-    console.log(req)
-  } catch (err) {
-    console.errer(err)
-  }
+function setValueFromDBQuery (variable, value) {
+  variable = value
+}
+
+app.get('/', (req, res) => {
+    connection.query('SELECT * from users', function (err, rows, fields) {
+      if (err) {
+        throw err
+      } else {
+        users.push(rows)
+      }
+    })
+    res.send(users)
+    console.log(users)
 })
