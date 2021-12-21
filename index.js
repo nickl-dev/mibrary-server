@@ -30,20 +30,19 @@ const connection = mysql.createConnection({
 // Connection to database
 connection.connect()
 
-let users = []
-
-function setValueFromDBQuery (variable, value) {
-  variable = value
-}
-
-app.get('/', (req, res) => {
+app.get('/register', (req, res) => {
     connection.query('SELECT * from users', function (err, rows, fields) {
       if (err) {
         throw err
       } else {
-        users.push(rows)
+        console.log(rows)
+        res.send(rows)
       }
     })
-    res.send(users)
-    console.log(users)
+})
+
+app.post('/register', (req, res) => {
+  console.log(req.body)
+  // const [username, email, password] = req.body
+  //   connection.query(`INSERT INTRO users (username, email, password) VALUES (${username}, ${email}, ${password})`)
 })
