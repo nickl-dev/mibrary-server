@@ -6,6 +6,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 
 app.use(cors())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 app.listen(port, () => console.log(`Server is listening at ${port} @ ${new Date(Date.now())}`))
@@ -31,7 +32,7 @@ const connection = mysql.createConnection({
 connection.connect()
 
 app.get('/register', (req, res) => {
-    connection.query('SELECT * from users', function (err, rows, fields) {
+    connection.query('SELECT * FROM USERS', (err, rows, fields) => {
       if (err) {
         throw err
       } else {
@@ -43,6 +44,4 @@ app.get('/register', (req, res) => {
 
 app.post('/register', (req, res) => {
   console.log(req.body)
-  // const [username, email, password] = req.body
-  //   connection.query(`INSERT INTRO users (username, email, password) VALUES (${username}, ${email}, ${password})`)
 })
