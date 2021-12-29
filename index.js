@@ -31,14 +31,15 @@ const connection = mysql.createConnection({
 // Connection to database
 connection.connect()
 
-app.get('/', (req, res) => {
-    connection.query('SELECT * FROM USERS', (err, rows, fields) => {
+app.post('/', (req, res) => {
+  const { email, password } = req.body
+    connection.query(`SELECT * FROM users WHERE email = ${email} AND password = ${password}`, (err, rows, fields) => {
       if (err) {
         throw err
       } else {
-        console.log(rows)
-        res.send(rows)
+        res.send('User exists')
       }
+      console.log(email, password)
     })
 })
 
