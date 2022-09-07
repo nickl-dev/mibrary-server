@@ -7,6 +7,6 @@
   alt="Books being stacked on top of each other"
 />
 
-This repository serves as the back end of the Personal Reading List application.
+This repository serves as the back end for the Personal Reading List application.
 
-Built using ```Node, Express, and MySQL``` (work in progress)
+Built using ```Node, Express, MySQL``` (work in progress)
