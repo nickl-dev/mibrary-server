@@ -2,8 +2,8 @@
 
 <img 
   src="https://media4.giphy.com/media/hUA5JLuHW7kTDQMy7f/giphy.gif" 
-  width="200" 
-  height="200"
+  width="150" 
+  height="150"
   alt="Books being stacked on top of each other"
 />
 
