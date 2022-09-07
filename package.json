@@ -1,7 +1,7 @@
 {
-  "name": "mibrary-server",
+  "name": "personal-reading-list-server",
   "version": "1.0.0",
-  "description": "mibrary-server",
+  "description": "personal-reading-list-server",
   "main": "index.js",
   "start": "node index.js",
   "scripts": {
