@@ -1,5 +1,5 @@
 {
-  "name": "personal-reading-list-server",
+  "name": "personal-reading-list-be",
   "version": "1.0.0",
   "description": "personal-reading-list-server",
   "main": "index.js",
@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "nlaldev",
+  "author": "nickl-dev",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.1",
