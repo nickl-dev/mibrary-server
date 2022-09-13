@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 // Database
 const mysql = require('mysql');
-import { mySQLQuery, MYSQL_QUERIES } from "./api/queries";
+import { mySQLQuery, MYSQL_QUERIES } from "./mySQL/queries";
 
 // Env variables
 const DB_HOST: string = process.env.DB_HOST;
