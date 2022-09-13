@@ -5,7 +5,9 @@
   "main": "index.js",
   "start": "node index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "graphpack",
+    "build": "graphpack build"
   },
   "author": "nickl-dev",
   "license": "ISC",
@@ -18,6 +20,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.7.17",
+    "graphpack": "^1.0.9",
     "typescript": "^4.8.3"
   }
 }
