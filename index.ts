@@ -1,4 +1,5 @@
 require('dotenv/config');
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -10,7 +11,7 @@ app.use(bodyParser.json());
 
 // Database
 const mysql = require('mysql');
-import { mySQLQuery, MYSQL_QUERIES } from "./mySQL/queries";
+import { mySQLQuery, MYSQL_QUERIES } from "./src/mySQL/queries";
 
 // Env variables
 const DB_HOST: string = process.env.DB_HOST;

@@ -1,0 +1,27 @@
+type User {
+  id: String!
+  name: String!
+  email: String!
+  password: String!
+  books: [Book!]!
+}
+
+type Book {
+  title: String!
+  author: String!
+  genre: String!
+  description: String!
+}
+
+type Query {
+  users: [User!]!
+  user(email: String!): User!
+}
+
+type Mutation {
+  createUser(id: String!, name: String!, email: String!, password: String!): User!
+  # updateUser(id: String!, name: String, email: String, password: String!, books: ): User!
+  deleteUser(email: String!): User!
+  createBook(email: String!, title: String!, author: String!, genre: String!, description: String!): Book!
+  deleteBook(title: String!): Book!
+}
