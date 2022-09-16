@@ -409,29 +409,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ([{
   id: Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])(),
   name: "John",
-  email: "john1@gmail.com",
-  password: 'personal-reading-list',
-  books: [{
-    title: 'The Alchemist',
-    author: 'Paulo Coehlo',
-    genre: 'Drama, Quest, Fantasy Fiction, Adventure Fiction',
-    description: 'Combining magic, mysticism, wisdom and wonder into an inspiring tale of self-discovery, The Alchemist has become a modern classic, selling millions of copies around the world and transforming the lives of countless readers across generations. Paulo Coelho\'s masterpiece tells the mystical story of Santiago, an Andalusian shepherd boy who yearns to travel in search of a worldly treasure. His quest will lead him to riches far different—and far more satisfying—than he ever imagined. Santiago\'s journey teaches us about the essential wisdom of listening to our hearts, of recognizing opportunity and learning to read the omens strewn along life\'s path, and, most importantly, to follow our dreams.'
-  }]
-}, {
-  id: Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])(),
-  name: "John",
-  email: "john2@gmail.com",
-  password: 'personal-reading-list',
-  books: [{
-    title: 'The Alchemist',
-    author: 'Paulo Coehlo',
-    genre: 'Drama, Quest, Fantasy Fiction, Adventure Fiction',
-    description: 'Combining magic, mysticism, wisdom and wonder into an inspiring tale of self-discovery, The Alchemist has become a modern classic, selling millions of copies around the world and transforming the lives of countless readers across generations. Paulo Coelho\'s masterpiece tells the mystical story of Santiago, an Andalusian shepherd boy who yearns to travel in search of a worldly treasure. His quest will lead him to riches far different—and far more satisfying—than he ever imagined. Santiago\'s journey teaches us about the essential wisdom of listening to our hearts, of recognizing opportunity and learning to read the omens strewn along life\'s path, and, most importantly, to follow our dreams.'
-  }]
-}, {
-  id: Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])(),
-  name: "John",
-  email: "john3@gmail.com",
+  email_address: "john1@gmail.com",
   password: 'personal-reading-list',
   books: [{
     title: 'The Alchemist',
@@ -440,6 +418,44 @@ __webpack_require__.r(__webpack_exports__);
     description: 'Combining magic, mysticism, wisdom and wonder into an inspiring tale of self-discovery, The Alchemist has become a modern classic, selling millions of copies around the world and transforming the lives of countless readers across generations. Paulo Coelho\'s masterpiece tells the mystical story of Santiago, an Andalusian shepherd boy who yearns to travel in search of a worldly treasure. His quest will lead him to riches far different—and far more satisfying—than he ever imagined. Santiago\'s journey teaches us about the essential wisdom of listening to our hearts, of recognizing opportunity and learning to read the omens strewn along life\'s path, and, most importantly, to follow our dreams.'
   }]
 }]);
+
+/***/ }),
+
+/***/ "./src/mySQL/database.ts":
+/*!*******************************!*\
+  !*** ./src/mySQL/database.ts ***!
+  \*******************************/
+/*! exports provided: connection, mySQLQuery */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "connection", function() { return connection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mySQLQuery", function() { return mySQLQuery; });
+__webpack_require__(/*! dotenv/config */ "dotenv/config");
+
+const mysql = __webpack_require__(/*! mysql */ "mysql"); // Env variables
+
+
+const DB_HOST = process.env.DB_HOST;
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_NAME = process.env.DB_NAME; // Creating connection to database
+
+const connection = mysql.createConnection({
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_NAME
+}); // Reusable query funciton
+
+function mySQLQuery(connection, query) {
+  connection.query(query, (error, result) => {
+    if (error) throw error;
+    console.log(result);
+    return result;
+  });
+}
 
 /***/ }),
 
@@ -453,13 +469,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _db__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./db */ "./src/db.js");
+/* harmony import */ var _mySQL_database__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mySQL/database */ "./src/mySQL/database.ts");
+__webpack_require__(/*! dotenv/config */ "dotenv/config"); // import { v4 as uuidv4 } from 'uuid';
+
+
+ // Database
+
 
 const resolvers = {
   Query: {
     user: (parent, {
-      email
+      email_address
     }, context, info) => {
-      return _db__WEBPACK_IMPORTED_MODULE_0__["default"].find(user => user.email === email);
+      return _db__WEBPACK_IMPORTED_MODULE_0__["default"].find(user => user.email_address === email_address);
     },
     users: (parent, args, context, info) => {
       return _db__WEBPACK_IMPORTED_MODULE_0__["default"];
@@ -469,19 +491,20 @@ const resolvers = {
     createUser: (parent, {
       id,
       name,
-      email,
+      email_address,
       password
     }, context, info) => {
-      const userAlreadyExists = _db__WEBPACK_IMPORTED_MODULE_0__["default"].some(user => user.email === email);
-      if (userAlreadyExists) throw new Error('User already exists.');
-      const newUser = {
-        id,
-        name,
-        email,
-        password
-      };
-      _db__WEBPACK_IMPORTED_MODULE_0__["default"].push(newUser);
-      return newUser;
+      // const userAlreadyExists = users.some(user => user.email_address === email_address);
+      // if (userAlreadyExists) throw new Error ('User already exists.');
+      // const newUser = { id, name, email_address, password };
+      // users.push(newUser);
+      // return newUser;
+      _mySQL_database__WEBPACK_IMPORTED_MODULE_1__["connection"].connect(err => {
+        if (err) throw err;
+        console.log('Connected');
+        Object(_mySQL_database__WEBPACK_IMPORTED_MODULE_1__["mySQLQuery"])(_mySQL_database__WEBPACK_IMPORTED_MODULE_1__["connection"], `INSERT INTO users(id, name, email_address, password) 
+          VALUES (${id}, ${name}, ${email_address}, ${password})`);
+      });
     },
     // updateUser: (parent, { id, name, email, age }, context, info) => {
     //   const newUser = users.find(user => user.id === id);
@@ -491,15 +514,15 @@ const resolvers = {
     //   return newUser;
     // },
     deleteUser: (parent, {
-      email
+      email_address
     }, context, info) => {
-      const userIndex = _db__WEBPACK_IMPORTED_MODULE_0__["default"].findIndex(user => user.email === email);
+      const userIndex = _db__WEBPACK_IMPORTED_MODULE_0__["default"].findIndex(user => user.email_address === email_address);
       if (userIndex === -1) throw new Error("User not found.");
       const deletedUsers = _db__WEBPACK_IMPORTED_MODULE_0__["default"].splice(userIndex, 1);
       return deletedUsers[0];
     },
     createBook: (parent, {
-      email,
+      email_address,
       title,
       author,
       genre,
@@ -511,7 +534,7 @@ const resolvers = {
         genre,
         description
       };
-      const user = _db__WEBPACK_IMPORTED_MODULE_0__["default"].find(user => user.email === email);
+      const user = _db__WEBPACK_IMPORTED_MODULE_0__["default"].find(user => user.email_address === email_address);
       const bookAlreadyExists = user.books.some(book => book.title.toLowerCase() === newBook.title.toLowerCase());
       if (bookAlreadyExists) throw new Error('Book already exists.');
       user.books.push(newBook);
@@ -530,8 +553,8 @@ const resolvers = {
 /***/ (function(module, exports) {
 
 
-    var doc = {"kind":"Document","definitions":[{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"User"},"interfaces":[],"directives":[],"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"id"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"name"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"email"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"password"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"books"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Book"}}}}},"directives":[]}]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"Book"},"interfaces":[],"directives":[],"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"title"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"author"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"genre"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"description"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"Query"},"interfaces":[],"directives":[],"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"users"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"User"}}}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"email"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"User"}}},"directives":[]}]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"Mutation"},"interfaces":[],"directives":[],"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"createUser"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"id"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"name"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"email"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"password"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"User"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"deleteUser"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"email"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"User"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"createBook"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"email"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"title"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"author"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"genre"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"description"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Book"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"deleteBook"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"title"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Book"}}},"directives":[]}]}],"loc":{"start":0,"end":651}};
-    doc.loc.source = {"body":"type User {\r\n  id: String!\r\n  name: String!\r\n  email: String!\r\n  password: String!\r\n  books: [Book!]!\r\n}\r\n\r\ntype Book {\r\n  title: String!\r\n  author: String!\r\n  genre: String!\r\n  description: String!\r\n}\r\n\r\ntype Query {\r\n  users: [User!]!\r\n  user(email: String!): User!\r\n}\r\n\r\ntype Mutation {\r\n  createUser(id: String!, name: String!, email: String!, password: String!): User!\r\n  # updateUser(id: String!, name: String, email: String, password: String!, books: ): User!\r\n  deleteUser(email: String!): User!\r\n  createBook(email: String!, title: String!, author: String!, genre: String!, description: String!): Book!\r\n  deleteBook(title: String!): Book!\r\n}","name":"GraphQL request","locationOffset":{"line":1,"column":1}};
+    var doc = {"kind":"Document","definitions":[{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"User"},"interfaces":[],"directives":[],"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"id"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"name"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"email_address"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"password"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"Book"},"interfaces":[],"directives":[],"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"id"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"title"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"author"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"genre"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"description"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"Query"},"interfaces":[],"directives":[],"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"users"},"arguments":[],"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"User"}}}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"email_address"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"User"}}},"directives":[]}]},{"kind":"ObjectTypeDefinition","name":{"kind":"Name","value":"Mutation"},"interfaces":[],"directives":[],"fields":[{"kind":"FieldDefinition","name":{"kind":"Name","value":"createUser"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"id"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"name"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"email_address"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"password"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"User"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"deleteUser"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"email_address"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"User"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"createBook"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"id"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"title"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"author"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"genre"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]},{"kind":"InputValueDefinition","name":{"kind":"Name","value":"description"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Book"}}},"directives":[]},{"kind":"FieldDefinition","name":{"kind":"Name","value":"deleteBook"},"arguments":[{"kind":"InputValueDefinition","name":{"kind":"Name","value":"title"},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"directives":[]}],"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Book"}}},"directives":[]}]}],"loc":{"start":0,"end":697}};
+    doc.loc.source = {"body":"type User {\r\n  id: String!\r\n  name: String!\r\n  email_address: String!\r\n  password: String!\r\n  # books: [Book!]!\r\n}\r\n\r\ntype Book {\r\n  id: String!\r\n  title: String!\r\n  author: String!\r\n  genre: String!\r\n  description: String!\r\n}\r\n\r\ntype Query {\r\n  users: [User!]!\r\n  user(email_address: String!): User!\r\n}\r\n\r\ntype Mutation {\r\n  createUser(id: String!, name: String!, email_address: String!, password: String!): User!\r\n  # updateUser(id: String!, name: String, email: String, password: String!, books: ): User!\r\n  deleteUser(email_address: String!): User!\r\n  createBook(id: String!, title: String!, author: String!, genre: String!, description: String!): Book!\r\n  deleteBook(title: String!): Book!\r\n}","name":"GraphQL request","locationOffset":{"line":1,"column":1}};
   
 
     var names = {};
@@ -624,6 +647,17 @@ module.exports = require("cosmiconfig");
 
 /***/ }),
 
+/***/ "dotenv/config":
+/*!********************************!*\
+  !*** external "dotenv/config" ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("dotenv/config");
+
+/***/ }),
+
 /***/ "friendly-errors-webpack-plugin":
 /*!*************************************************!*\
   !*** external "friendly-errors-webpack-plugin" ***!
@@ -643,6 +677,17 @@ module.exports = require("friendly-errors-webpack-plugin");
 /***/ (function(module, exports) {
 
 module.exports = require("fs");
+
+/***/ }),
+
+/***/ "mysql":
+/*!************************!*\
+  !*** external "mysql" ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("mysql");
 
 /***/ }),
 
