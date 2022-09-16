@@ -1,7 +1,7 @@
 {
   "name": "personal-reading-list-be",
   "version": "1.0.0",
-  "description": "personal-reading-list-server",
+  "description": "personal-reading-list-be",
   "main": "index.js",
   "start": "node index.js",
   "scripts": {

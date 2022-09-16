@@ -8,7 +8,7 @@ const DB_PASSWORD: string = process.env.DB_PASSWORD;
 const DB_NAME: string = process.env.DB_NAME;
 
 // Creating connection to database
-export const connection = mysql.createConnection({
+const connection = mysql.createConnection({
   host: DB_HOST,
   user: DB_USER,
   password: DB_PASSWORD,
@@ -16,10 +16,12 @@ export const connection = mysql.createConnection({
 });
 
 // Reusable query funciton
-export function mySQLQuery (connection: any, query: string) {
+function mySQLQuery (connection: any, query: string) {
   connection.query(query, (error: any, result: any) => {
     if (error) throw error;
     console.log(result)
     return result;
   })
 }
+
+module.exports = { connection, mySQLQuery };
