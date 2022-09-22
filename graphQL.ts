@@ -3,20 +3,30 @@ const { knex } = require('./mySQL-config');
 
 const typeDefs = gql`
   type Query {
-    greeting: [User!]!
+    users: [User!]!
+    user(id: ID): [User!]!
   }
   
   type User {
-    id: String!,
-    name: String!,
-    email_address: String!,
+    id: ID!
+    name: String!
+    email_address: String!
     password: String!
+    books: [Book!]
+  }
+
+  type Book {
+    id: ID!
+    title: String!
+    author: String!
+    description: String!
   }
 `;
 
 const resolvers = {
   Query: {
-    greeting: () => knex.select().from('users')
+    users: () => knex.select().from('users'),
+    user: (parent: any, args: any, context: any, info: any) => knex('users').where({ id: args.id }) 
   }
 };
 
