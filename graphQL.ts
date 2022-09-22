@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server';
-const MY_SQL_QUERY = require('./mySQL-config');
+const { knex } = require('./mySQL-config');
 
 const typeDefs = gql`
   type Query {
@@ -16,7 +16,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    greeting: () => MY_SQL_QUERY('SELECT * FROM users.users')
+    greeting: () => knex.select().from('users')
   }
 };
 
