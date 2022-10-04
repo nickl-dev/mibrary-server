@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
-const { knex } = require('./mySQL-config');
+const { knex, mySQLQuery } = require('./mySQL-config');
 const typeDefs = (0, apollo_server_1.gql) `
   type Query {
     users: [User!]!
@@ -25,7 +25,7 @@ const typeDefs = (0, apollo_server_1.gql) `
 `;
 const resolvers = {
     Query: {
-        users: () => knex.select().from('users'),
+        users: () => mySQLQuery('SELECT * FROM users.users'),
         user: (parent, args, context, info) => knex('users').where({ id: args.id })
     }
 };
